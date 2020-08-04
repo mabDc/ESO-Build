@@ -1,4 +1,4 @@
-name: Flutter Apk Build
+name: ESO Apk Build
 
 on:
   watch:
@@ -23,7 +23,7 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           channel: beta
-          flutter-version: 1.20.0-7.2.pre
+#          flutter-version: 1.20.0-7.2.pre
 
       - name: Checkout ESO project
         uses: actions/checkout@v2
