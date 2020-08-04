@@ -1,0 +1,55 @@
+name: Flutter Build
+
+
+on:
+  watch:
+    types: [started]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout this project
+        uses: actions/checkout@v2
+        with:
+          path: actions
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12.x
+
+      - name: Flutter SDK install
+        uses: subosito/flutter-action@v1
+        with:
+          channel: beta
+#          flutter-version: 1.20.0-7.2.pre
+
+      - name: Checkout flutter project
+        uses: actions/checkout@v2
+        with:
+          repository: mabDc/eso_from_gitlab
+          ref: master
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: eso
+
+      - name: Fix pubspec.yaml and build.gradle
+        run: |
+          echo "insert [  moor_ffi: ^0.7.0]"
+          sed -i '83a\  moor_ffi: ^0.7.0' $GITHUB_WORKSPACE/eso/pubspec.yaml
+          echo "insert [ndkVersion '21.3.6528147']"
+          sed -i "39a\    ndkVersion '21.3.6528147'" $GITHUB_WORKSPACE/eso/android/app/build.gradle
+
+      - name: Build apk
+        run: |
+          cd $GITHUB_WORKSPACE/eso
+          flutter pub get
+          flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi -v
+
+      - name: Upload flutter apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: ESO
+          path: ${{ github.workspace }}/eso/build/app/outputs/apk/release/*.apk
+          if-no-files-found: error
