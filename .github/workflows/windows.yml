@@ -1,9 +1,8 @@
 name: ESO Windows Build
 
-
 on:
   watch:
-    types: [started]
+    types: [finished]
 
 jobs:
   build:
