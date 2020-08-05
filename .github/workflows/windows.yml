@@ -1,4 +1,5 @@
-name: ESO Apk Build
+name: ESO Windows Build
+
 
 on:
   watch:
@@ -6,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout this project
@@ -22,8 +23,7 @@ jobs:
       - name: Flutter SDK install
         uses: subosito/flutter-action@v1
         with:
-          channel: beta
-#          flutter-version: 1.20.0-7.2.pre
+          channel: dev
 
       - name: Checkout ESO project
         uses: actions/checkout@v2
@@ -33,20 +33,22 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: eso
 
-      - name: Fix build.gradle
+      - name: Flutter channel change
         run: |
-          echo "insert [ndkVersion '21.3.6528147']"
-          sed -i "39a\    ndkVersion '21.3.6528147'" $GITHUB_WORKSPACE/eso/android/app/build.gradle
+          flutter channel master
+          flutter version 1.20.0-7.2.pre
+          flutter upgrade
+          flutter config --enable-windows-desktop
 
-      - name: Build apk
+      - name: Build windows
         run: |
-          cd $GITHUB_WORKSPACE/eso
+          cd eso
           flutter pub get
-          flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi -v
+          flutter build windows -v
 
-      - name: Upload apk
+      - name: Upload flutter windows
         uses: actions/upload-artifact@v2
         with:
-          name: ESO_APK
-          path: ${{ github.workspace }}/eso/build/app/outputs/apk/release/*.apk
+          name: ESO_WINDOWS
+          path: ${{ github.workspace }}/eso/build/windows/runner/Release
           if-no-files-found: error
