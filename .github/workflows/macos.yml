@@ -1,4 +1,4 @@
-name: Flutter Macos Build
+name: ESO Macos Build
 
 on:
   watch:
