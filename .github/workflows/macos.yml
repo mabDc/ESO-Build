@@ -47,6 +47,6 @@ jobs:
       - name: Upload flutter macos
         uses: actions/upload-artifact@v2
         with:
-          name: ESO
+          name: ESO_MACOS
           path: eso/build/macos/Build/Products/Release/eso.app
           if-no-files-found: error
