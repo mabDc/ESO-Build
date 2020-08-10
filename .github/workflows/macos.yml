@@ -1,0 +1,52 @@
+name: Flutter Macos Build
+
+on:
+  watch:
+    types: [started]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout this project
+        uses: actions/checkout@v2
+        with:
+          path: actions
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12.x
+
+    
+      - name: Flutter SDK install
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: 1.18.0-9.0.pre
+          channel: dev
+
+      - name: Flutter set
+        run: |
+          flutter config --enable-macos-desktop
+
+      - name: Checkout flutter project
+        uses: actions/checkout@v2
+        with:
+          repository: mabDc/eso_from_gitlab
+          ref: master
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: eso
+
+      - name: Build macos
+        run: |
+          cd eso
+          flutter pub get
+          flutter build macos -v
+
+      - name: Upload flutter macos
+        uses: actions/upload-artifact@v2
+        with:
+          name: ESO
+          path: eso/build/macos/Build/Products/Release/eso.app
+          if-no-files-found: error
