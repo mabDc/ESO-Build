@@ -44,6 +44,9 @@ jobs:
           flutter pub get
           flutter build windows -v
 
+      - name: Move dll files
+        run: bash actions/.github/scripts/win.sh
+
       - name: Upload flutter windows
         uses: actions/upload-artifact@v2
         with:
