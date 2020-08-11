@@ -20,12 +20,15 @@ jobs:
           java-version: 12.x
 
       - name: Flutter SDK install
-        run: |
-          git clone https://github.com/flutter/flutter.git --depth=1 -b 1.20.0 _flutter
-          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
+        uses: subosito/flutter-action@v1
+        with:
+          channel: dev
 
-      - name: Get flutter version
-        run: flutter --version
+      - name: Flutter channel change
+        run: |
+          flutter channel master
+          flutter version 1.20.0-7.2.pre
+          flutter config --enable-windows-desktop
         
       - name: Checkout ESO project
         uses: actions/checkout@v2
