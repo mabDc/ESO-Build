@@ -20,10 +20,13 @@ jobs:
           java-version: 12.x
 
       - name: Flutter SDK install
-        uses: subosito/flutter-action@v1
-        with:
-          channel: dev
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth=1 -b 1.20.0 _flutter
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
 
+      - name: Get flutter version
+        run: flutter --version
+        
       - name: Checkout ESO project
         uses: actions/checkout@v2
         with:
@@ -32,12 +35,6 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: eso
 
-      - name: Flutter channel change
-        run: |
-          flutter channel master
-          flutter version 1.20.0-7.2.pre
-          flutter config --enable-windows-desktop
-
       - name: Build windows
         run: |
           cd eso
@@ -45,7 +42,7 @@ jobs:
           flutter build windows -v
 
       - name: Move dll files
-        run: ./actions/.github/scripts/win.sh
+        run: cp -f $GITHUB_WORKSPACE/eso/*.dll $GITHUB_WORKSPACE/eso/build/windows/runner/Release
 
       - name: Upload flutter windows
         uses: actions/upload-artifact@v2
