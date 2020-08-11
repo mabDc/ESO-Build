@@ -21,13 +21,13 @@ jobs:
 
     
       - name: Flutter SDK install
-        uses: subosito/flutter-action@v1
-        with:
-          flutter-version: 1.18.0-9.0.pre
-          channel: dev
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth=1 -b 1.20.0 _flutter
+          echo "::add-path::$GITHUB_WORKSPACE/_flutter/bin"
 
       - name: Flutter set
         run: |
+          flutter --version
           flutter config --enable-macos-desktop
 
       - name: Checkout flutter project
