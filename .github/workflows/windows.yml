@@ -45,7 +45,7 @@ jobs:
           flutter build windows -v
 
       - name: Move dll files
-        run: cp -f $GITHUB_WORKSPACE/eso/*.dll $GITHUB_WORKSPACE/eso/build/windows/runner/Release
+        run: cp $GITHUB_WORKSPACE/eso/*.dll $GITHUB_WORKSPACE/eso/build/windows/runner/Release
 
       - name: Upload flutter windows
         uses: actions/upload-artifact@v2
