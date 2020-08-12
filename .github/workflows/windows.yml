@@ -41,7 +41,7 @@ jobs:
       - name: Build windows
         run: |
           cd eso
-          mv pubspec.windows.yaml pubspec.yaml
+          move pubspec.windows.yaml pubspec.yaml
           flutter pub get
           flutter build windows -v
 
