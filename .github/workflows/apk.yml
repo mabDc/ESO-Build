@@ -44,7 +44,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/eso
           flutter pub get
-          flutter build apk --target-platform android-arm,android-arm64,android-x64 --split-per-abi -v
+          flutter build apk --split-per-abi -v
 
       - name: Upload apk
         uses: actions/upload-artifact@v2
